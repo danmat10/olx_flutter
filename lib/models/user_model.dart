@@ -1,20 +1,27 @@
 class UserModel {
   final String id;
-  final String nickname;
-  final String email;
-  final String password;
+  final String? email;
+  final String? password;
 
   UserModel({
     required this.id,
-    required this.nickname,
     required this.email,
     required this.password,
   });
 
+  UserModel.withoutPassword({
+    required this.id,
+    required this.email,
+  }) : password = null;
+
+  UserModel.withoutId({
+    required this.email,
+    required this.password,
+  }) : id = '';
+
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
-      nickname: map['nickname'],
       email: map['email'],
       password: map['password'],
     );
@@ -23,7 +30,6 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nickname': nickname,
       'email': email,
       'password': password,
     };

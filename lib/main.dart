@@ -1,15 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:olx_flutter/views/login/login_screen.dart';
+import 'package:olx_flutter/views/user/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  var log = FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: "danielmatthes10@gmail.com", password: "123456");
-  print(log);
-  FirebaseAuth.instance.createUserWithEmailAndPassword(email: "teste@gmail.com", password: "123456")
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyD2wdoZj6cG9G3_-_MpRObcujc0F0WP0zk',
+          appId: '1:850986062811:android:db595a70abe00d83898dfe',
+          messagingSenderId: '850986062811',
+          projectId: 'olx-flutter-d47f0'));
   runApp(MyApp());
 }
 

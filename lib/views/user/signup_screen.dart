@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_flutter/utils/utils.dart';
 import 'package:olx_flutter/services/user_service.dart';
 import 'package:olx_flutter/models/user_model.dart';
-import 'package:olx_flutter/views/login/login_screen.dart';
+import 'package:olx_flutter/views/user/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -12,7 +13,6 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final UserService userService = UserService();
-  String? _nickname;
   String? _email;
   String? _password;
 
@@ -52,21 +52,6 @@ class _SignupScreenState extends State<SignupScreen> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Apelido',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira um apelido.';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _nickname = value,
-                  ),
-                  SizedBox(height: 10),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'E-mail',
@@ -109,9 +94,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        final newUserModel = UserModel(
-                          id: '',
-                          nickname: _nickname!,
+                        final newUserModel = UserModel.withoutId(
                           email: _email!,
                           password: _password!,
                         );
@@ -132,11 +115,15 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                           );
-                        } catch (error) {
+                        } on FirebaseAuthException catch (authError) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                                content: Text(
-                                    'Erro ao registrar. Tente novamente.')),
+                                content: Text(authError.message ??
+                                    'Ocorreu um erro desconhecido')),
+                          );
+                        } catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(error.toString())),
                           );
                         }
                       }
